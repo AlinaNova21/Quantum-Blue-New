@@ -1,4 +1,5 @@
 using Content.Shared.Clothing.Components;
+using Content.Shared.Inventory; // QB
 using Content.Shared.Clothing.EntitySystems;
 using Content.Shared.Emp;
 using Content.Shared.IdentityManagement;
@@ -65,6 +66,25 @@ public sealed class ChameleonClothingSystem : SharedChameleonClothingSystem
         UpdateUi(uid, component);
         Dirty(uid, component);
     }
+
+    // QB start - lets admins turn existing clothing into chameleon clothing at runtime (see chameleonify command)
+    /// <summary>
+    ///     Adds <see cref="ChameleonClothingComponent"/> to an already spawned entity and registers the chameleon UI,
+    ///     so the "Chameleon" verb actually opens the menu.
+    /// </summary>
+    public void MakeChameleon(EntityUid uid, SlotFlags slot, string defaultProto, bool affectedByEmp = false)
+    {
+        var component = EnsureComp<ChameleonClothingComponent>(uid);
+        component.Slot = slot;
+        component.AffectedByEmp = affectedByEmp;
+
+        EnsureComp<UserInterfaceComponent>(uid);
+        if (!UI.HasUi(uid, ChameleonUiKey.Key))
+            UI.SetUi(uid, ChameleonUiKey.Key, new InterfaceData("ChameleonBoundUserInterface"));
+
+        SetSelectedPrototype(uid, defaultProto, true, component);
+    }
+    // QB end
 
     public override void Update(float frameTime)
     {
