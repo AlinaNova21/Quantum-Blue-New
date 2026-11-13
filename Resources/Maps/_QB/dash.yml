@@ -17046,7 +17046,7 @@ entities:
     - type: Transform
       pos: -45.436966,-17.304325
       parent: 3
-- proto: ChairOfficeDark
+- proto: ChairOfficeLight
   entities:
   - uid: 488
     components:
